@@ -1,5 +1,6 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Terminal = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Terminal = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.CHARSETS = {};
 exports.DEFAULT_CHARSET = exports.CHARSETS['B'];
 exports.CHARSETS['0'] = {
@@ -162,6 +163,7 @@ exports.CHARSETS['='] = {
 
 },{}],2:[function(require,module,exports){
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var CompositionHelper = (function () {
     function CompositionHelper(textarea, compositionView, terminal) {
         this.textarea = textarea;
@@ -288,6 +290,7 @@ exports.CompositionHelper = CompositionHelper;
 
 },{}],3:[function(require,module,exports){
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var C0;
 (function (C0) {
     C0.NUL = '\x00';
@@ -331,6 +334,7 @@ var C0;
 
 },{}],4:[function(require,module,exports){
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 ;
 var EventEmitter = (function () {
     function EventEmitter() {
@@ -388,6 +392,7 @@ exports.EventEmitter = EventEmitter;
 
 },{}],5:[function(require,module,exports){
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var EscapeSequences_1 = require("./EscapeSequences");
 var Charsets_1 = require("./Charsets");
 var InputHandler = (function () {
@@ -1314,6 +1319,7 @@ var wcwidth = (function (opts) {
 
 },{"./Charsets":1,"./EscapeSequences":3}],6:[function(require,module,exports){
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var INVALID_LINK_CLASS = 'xterm-invalid-link';
 var protocolClause = '(https?:\\/\\/)';
 var domainCharacterSet = '[\\da-z\\.-]+';
@@ -1513,15 +1519,16 @@ var Linkifier = (function () {
             this._replaceNode(node, leftTextNode, newNode, rightTextNode);
         }
     };
+    Linkifier.TIME_BEFORE_LINKIFY = 200;
     return Linkifier;
 }());
-Linkifier.TIME_BEFORE_LINKIFY = 200;
 exports.Linkifier = Linkifier;
 
 
 
 },{}],7:[function(require,module,exports){
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var EscapeSequences_1 = require("./EscapeSequences");
 var Charsets_1 = require("./Charsets");
 var normalStateHandler = {};
@@ -1902,37 +1909,32 @@ var Parser = (function () {
                             case '':
                                 break;
                             case '$q':
-                                var pt = this._terminal.currentParam, valid = false;
-                                switch (pt) {
+                                switch (this._terminal.currentParam) {
                                     case '"q':
-                                        pt = '0"q';
+                                        this._terminal.send(EscapeSequences_1.C0.ESC + "P1$r0\"q" + EscapeSequences_1.C0.ESC + "\\");
                                         break;
                                     case '"p':
-                                        pt = '61"p';
+                                        this._terminal.send(EscapeSequences_1.C0.ESC + "P1$r61\"p" + EscapeSequences_1.C0.ESC + "\\");
                                         break;
                                     case 'r':
-                                        pt = ''
+                                        var pt = ''
                                             + (this._terminal.scrollTop + 1)
                                             + ';'
                                             + (this._terminal.scrollBottom + 1)
                                             + 'r';
+                                        this._terminal.send(EscapeSequences_1.C0.ESC + "P1$r" + pt + EscapeSequences_1.C0.ESC + "\\");
                                         break;
                                     case 'm':
-                                        pt = '0m';
+                                        this._terminal.send(EscapeSequences_1.C0.ESC + "P1$r0m" + EscapeSequences_1.C0.ESC + "\\");
                                         break;
                                     default:
                                         this._terminal.error('Unknown DCS Pt: %s.', pt);
-                                        pt = '';
                                         break;
                                 }
-                                this._terminal.send(EscapeSequences_1.C0.ESC + 'P' + +valid + '$r' + pt + EscapeSequences_1.C0.ESC + '\\');
                                 break;
                             case '+p':
                                 break;
                             case '+q':
-                                pt = this._terminal.currentParam
-                                    , valid = false;
-                                this._terminal.send(EscapeSequences_1.C0.ESC + 'P' + +valid + '+r' + pt + EscapeSequences_1.C0.ESC + '\\');
                                 break;
                             default:
                                 this._terminal.error('Unknown DCS prefix: %s.', this._terminal.prefix);
@@ -1997,6 +1999,7 @@ exports.Parser = Parser;
 
 },{"./Charsets":1,"./EscapeSequences":3}],8:[function(require,module,exports){
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var MAX_REFRESH_FRAME_SKIP = 5;
 var FLAGS;
 (function (FLAGS) {
@@ -2208,6 +2211,7 @@ function checkBoldBroken(document) {
 
 },{}],9:[function(require,module,exports){
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var Viewport = (function () {
     function Viewport(terminal, viewportElement, scrollArea, charMeasure) {
         var _this = this;
@@ -2285,6 +2289,7 @@ exports.Viewport = Viewport;
 
 },{}],10:[function(require,module,exports){
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 function prepareTextForClipboard(text) {
     var space = String.fromCharCode(32), nonBreakingSpace = String.fromCharCode(160), allNonBreakingSpaces = new RegExp(nonBreakingSpace, 'g'), processedText = text.split('\n').map(function (line) {
         var processedLine = line.replace(/\s+$/g, '').replace(allNonBreakingSpaces, space);
@@ -2366,6 +2371,7 @@ exports.rightClickHandler = rightClickHandler;
 
 },{}],11:[function(require,module,exports){
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var Generic_1 = require("./Generic");
 var isNode = (typeof navigator === 'undefined') ? true : false;
 var userAgent = (isNode) ? 'node' : navigator.userAgent;
@@ -2381,11 +2387,17 @@ exports.isMSWindows = Generic_1.contains(['Windows', 'Win16', 'Win32', 'WinCE'],
 
 },{"./Generic":14}],12:[function(require,module,exports){
 "use strict";
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
 var EventEmitter_js_1 = require("../EventEmitter.js");
 var CharMeasure = (function (_super) {
     __extends(CharMeasure, _super);
@@ -2444,6 +2456,7 @@ exports.CharMeasure = CharMeasure;
 
 },{"../EventEmitter.js":4}],13:[function(require,module,exports){
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var CircularList = (function () {
     function CircularList(maxLength) {
         this._array = new Array(maxLength);
@@ -2582,6 +2595,7 @@ exports.CircularList = CircularList;
 
 },{}],14:[function(require,module,exports){
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 function contains(arr, el) {
     return arr.indexOf(el) >= 0;
 }
@@ -2592,6 +2606,7 @@ exports.contains = contains;
 
 },{}],15:[function(require,module,exports){
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var CompositionHelper_1 = require("./CompositionHelper");
 var EventEmitter_1 = require("./EventEmitter");
 var Viewport_1 = require("./Viewport");
