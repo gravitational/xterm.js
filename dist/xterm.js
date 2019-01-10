@@ -1,4 +1,4 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Terminal = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.Terminal = f()}})(function(){var define,module,exports;return (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CHARSETS = {};
@@ -1561,9 +1561,9 @@ var Linkifier = (function () {
         this._replaceNode(targetNode, leftTextNode, newNode, rightTextNode);
         return 1;
     };
+    Linkifier.TIME_BEFORE_LINKIFY = 200;
     return Linkifier;
 }());
-Linkifier.TIME_BEFORE_LINKIFY = 200;
 exports.Linkifier = Linkifier;
 
 
@@ -1953,38 +1953,44 @@ var Parser = (function () {
                             case '':
                                 break;
                             case '$q':
+<<<<<<< HEAD
                                 pt = this._terminal.currentParam;
                                 valid = false;
                                 switch (pt) {
+=======
+                                switch (this._terminal.currentParam) {
+>>>>>>> Fix vulnerability with handling of DCS
                                     case '"q':
-                                        pt = '0"q';
+                                        this._terminal.send(EscapeSequences_1.C0.ESC + "P1$r0\"q" + EscapeSequences_1.C0.ESC + "\\");
                                         break;
                                     case '"p':
-                                        pt = '61"p';
+                                        this._terminal.send(EscapeSequences_1.C0.ESC + "P1$r61\"p" + EscapeSequences_1.C0.ESC + "\\");
                                         break;
                                     case 'r':
-                                        pt = ''
+                                        var pt = ''
                                             + (this._terminal.scrollTop + 1)
                                             + ';'
                                             + (this._terminal.scrollBottom + 1)
                                             + 'r';
+                                        this._terminal.send(EscapeSequences_1.C0.ESC + "P1$r" + pt + EscapeSequences_1.C0.ESC + "\\");
                                         break;
                                     case 'm':
-                                        pt = '0m';
+                                        this._terminal.send(EscapeSequences_1.C0.ESC + "P1$r0m" + EscapeSequences_1.C0.ESC + "\\");
                                         break;
                                     default:
                                         this._terminal.error('Unknown DCS Pt: %s.', pt);
-                                        pt = '';
                                         break;
                                 }
-                                this._terminal.send(EscapeSequences_1.C0.ESC + 'P' + +valid + '$r' + pt + EscapeSequences_1.C0.ESC + '\\');
                                 break;
                             case '+p':
                                 break;
                             case '+q':
+<<<<<<< HEAD
                                 pt = this._terminal.currentParam;
                                 valid = false;
                                 this._terminal.send(EscapeSequences_1.C0.ESC + 'P' + +valid + '+r' + pt + EscapeSequences_1.C0.ESC + '\\');
+=======
+>>>>>>> Fix vulnerability with handling of DCS
                                 break;
                             default:
                                 this._terminal.error('Unknown DCS prefix: %s.', this._terminal.prefix);
@@ -2051,7 +2057,10 @@ exports.Parser = Parser;
 },{"./Charsets":1,"./EscapeSequences":3}],8:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+<<<<<<< HEAD
 var DomElementObjectPool_1 = require("./utils/DomElementObjectPool");
+=======
+>>>>>>> Fix vulnerability with handling of DCS
 var MAX_REFRESH_FRAME_SKIP = 5;
 var FLAGS;
 (function (FLAGS) {
@@ -2330,6 +2339,7 @@ function checkBoldBroken(terminal) {
 
 },{"./utils/DomElementObjectPool":16}],9:[function(require,module,exports){
 "use strict";
+<<<<<<< HEAD
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -2813,6 +2823,8 @@ exports.SelectionModel = SelectionModel;
 
 },{}],11:[function(require,module,exports){
 "use strict";
+=======
+>>>>>>> Fix vulnerability with handling of DCS
 Object.defineProperty(exports, "__esModule", { value: true });
 var Viewport = (function () {
     function Viewport(terminal, viewportElement, scrollArea, charMeasure) {
@@ -2907,11 +2919,20 @@ exports.Viewport = Viewport;
 },{}],12:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+<<<<<<< HEAD
 function prepareTextForTerminal(text, isMSWindows) {
     if (isMSWindows) {
         return text.replace(/\r?\n/g, '\r');
     }
     return text;
+=======
+function prepareTextForClipboard(text) {
+    var space = String.fromCharCode(32), nonBreakingSpace = String.fromCharCode(160), allNonBreakingSpaces = new RegExp(nonBreakingSpace, 'g'), processedText = text.split('\n').map(function (line) {
+        var processedLine = line.replace(/\s+$/g, '').replace(allNonBreakingSpaces, space);
+        return processedLine;
+    }).join('\n');
+    return processedText;
+>>>>>>> Fix vulnerability with handling of DCS
 }
 exports.prepareTextForTerminal = prepareTextForTerminal;
 function copyHandler(ev, term, selectionManager) {
@@ -3063,6 +3084,7 @@ exports.CharMeasure = CharMeasure;
 
 },{"../EventEmitter.js":4}],15:[function(require,module,exports){
 "use strict";
+<<<<<<< HEAD
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -3077,6 +3099,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var EventEmitter_1 = require("../EventEmitter");
 var CircularList = (function (_super) {
     __extends(CircularList, _super);
+=======
+Object.defineProperty(exports, "__esModule", { value: true });
+var CircularList = (function () {
+>>>>>>> Fix vulnerability with handling of DCS
     function CircularList(maxLength) {
         var _this = _super.call(this) || this;
         _this._array = new Array(maxLength);
@@ -3229,6 +3255,7 @@ exports.CircularList = CircularList;
 },{"../EventEmitter":4}],16:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+<<<<<<< HEAD
 var DomElementObjectPool = (function () {
     function DomElementObjectPool(type) {
         this.type = type;
@@ -3276,6 +3303,8 @@ exports.DomElementObjectPool = DomElementObjectPool;
 },{}],17:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+=======
+>>>>>>> Fix vulnerability with handling of DCS
 function contains(arr, el) {
     return arr.indexOf(el) >= 0;
 }
@@ -3287,6 +3316,7 @@ exports.contains = contains;
 },{}],18:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+<<<<<<< HEAD
 function getCoordsRelativeToElement(event, element) {
     if (event.pageX == null) {
         return null;
@@ -3325,6 +3355,8 @@ exports.getRawByteCoords = getRawByteCoords;
 },{}],19:[function(require,module,exports){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+=======
+>>>>>>> Fix vulnerability with handling of DCS
 var CompositionHelper_1 = require("./CompositionHelper");
 var EventEmitter_1 = require("./EventEmitter");
 var Viewport_1 = require("./Viewport");
