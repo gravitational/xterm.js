@@ -357,6 +357,26 @@ export class SelectionManager extends EventEmitter {
     coords[1]--;
     // Convert viewport coords to buffer coords
     coords[1] += this._terminal.ydisp;
+
+    // Used by terminal player
+    if (!this._terminal.viewportWrapper || this._terminal.viewportWrapper.scrollTop === 0) {
+      return coords
+    }
+
+    var diff = this._terminal.viewportWrapper.scrollHeight - this._terminal.viewportWrapper.scrollTop;
+    if (diff <= 0 ) {
+        return coords
+    }
+
+    var lineHeight = this._terminal.charMeasure.height;
+    var viewportHeight = lineHeight * this._terminal.rows;
+
+    // row offset between the terminal viewport
+    // and viewports wrapper scrolled position. Adds the offset to the y
+    // coord to re-align xterm-selection with the wrapper.
+    var offset = Math.round((viewportHeight - diff) / lineHeight) + 1
+    coords[1] += offset
+
     return coords;
   }
 

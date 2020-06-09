@@ -649,6 +649,9 @@ Terminal.prototype.open = function(parent, focus) {
     throw new Error('Terminal requires a parent element.');
   }
 
+  // Viewport wrapper
+  this.viewportWrapper = undefined;
+
   // Grab global elements
   this.context = this.parent.ownerDocument.defaultView;
   this.document = this.parent.ownerDocument;
